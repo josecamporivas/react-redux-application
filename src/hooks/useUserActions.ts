@@ -1,12 +1,16 @@
 import { useAppDispatch } from '../hooks/store'
-import { deleteUserById } from "../store/users/slice";
+import { addNewUser, deleteUserById } from "../store/users/slice";
 
-export const useUserAcitons = () => {
+export const useUserActions = () => {
     const dispatch = useAppDispatch()
 
     const removeUser = (id:string) => {
         dispatch(deleteUserById(id))
     }
 
-    return {removeUser}
+    const addUser = ({name,email,github} : any) => {
+        dispatch(addNewUser({name, email,github}))
+    }
+
+    return {addUser, removeUser}
 }

@@ -1,5 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from './users/slice'
+import userReducer, {rollbackDeleteUser} from './users/slice'
+import {toast} from 'sonner'
+
 //permite añadir codigo antes y despues de ejecutar una accion (persistencia de datos o comprobacion)
 const persistanceLocalStorageMiddleware = (store:any) => (next:any) => (action:any) => { 
     next(action)
