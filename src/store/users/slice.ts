@@ -10,7 +10,7 @@ export interface UserWithId extends User{
     id:string;
 }
 
-const initialState: UserWithId[] = [
+const DEFAULT_STATE: UserWithId[] = [
     {
         id:"1",
         name: "Peter Doe",
@@ -37,6 +37,15 @@ const initialState: UserWithId[] = [
     }
 ]
 
+const initialState: UserWithId[] = (() => {
+    const persistedStore = localStorage.getItem("__redux__state__")
+    if(persistedStore){
+        return JSON.parse(persistedStore).users
+    }
+
+    return DEFAULT_STATE
+})()
+
 export const usersSlice = createSlice({
     name: 'users',
     initialState,
@@ -50,4 +59,3 @@ export const usersSlice = createSlice({
 
 export default usersSlice.reducer
 
-export const {deleteUserById} = usersSlice.actions
