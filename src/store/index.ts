@@ -10,6 +10,27 @@ const persistanceLocalStorageMiddleware = (store:any) => (next:any) => (action:a
     localStorage.setItem("__redux__state__", JSON.stringify(store.getState())) 
 }
 
+const syncWithDatabaseMiddleware = (store:any) => (next:any) => (action:any) => { 
+    
+    const previousState = store.getState()
+    next(action)
+
+    //Sincronizamos con la base de datos despues de ejecutar la action
+    //En caso de que la base de datos de error, se hace un rollback ()
+    if(action.type === 'users/deleteUserById'){
+        const userToRemove = previousState.users.find(user => user.id === action.payload)
+
+        const errorDatabase = Math.random() // simula que la base de datos lanza un error
+        if(errorDatabase > 0.5){  //operacion exitosa
+            toast.success('Usuario eliminado correctamente')
+        }else{    //fallo en la base de datos, hay que hacer rollback
+            toast.error('Error elimiando el usuario')
+            store.dispatch(rollbackDeleteUser(userToRemove))
+        }
+    }
+
+}
+
 export const store = configureStore({
     reducer: {
         users: userReducer
